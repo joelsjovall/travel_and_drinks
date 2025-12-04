@@ -3,15 +3,16 @@ using server;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Config config = new("server=127.0.0.1;uid=root;pwd=rootroot;database=test");
+Config config = new ("server=127.0.0.1;uid=root;pwd=kebab123;database=drinks_and_travel");
 builder.Services.AddSingleton<Config>(config);
+/*
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+*/
 var app = builder.Build();
 app.UseSession();
 
@@ -50,3 +51,4 @@ async Task db_reset_to_default(Config config)
     """;
     await MySqlHelper.ExecuteNonQueryAsync(config.ConnectionString, users_table);
 }
+
