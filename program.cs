@@ -16,9 +16,9 @@ var app = builder.Build();
 app.UseSession();
 
 
-app.MapGet("/login", Login.Get);
-app.MapPost("/login", Login.Post);
-app.MapDelete("/login", Login.Delete);
+//app.MapGet("/login", Login.Get);
+//app.MapPost("/login", Login.Post);
+//app.MapDelete("/login", Login.Delete);
 
 app.MapGet("/users", Users.GetAll);
 app.MapPost("/users", Users.Post);
