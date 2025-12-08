@@ -3,7 +3,6 @@ using server;
 
 var builder = WebApplication.CreateBuilder(args);
 
-<<<<<<< HEAD
 Config config = new ("server=127.0.0.1;uid=root;pwd=kebab123;database=drinks_and_travel");
 builder.Services.AddSingleton<Config>(config);
 /*
@@ -14,17 +13,6 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 */
-=======
-Config config = new("server=127.0.0.1;uid=root;pwd=Mans010101!;database=drinks_and_travel");
-builder.Services.AddSingleton<Config>(config);
-//builder.Services.AddDistributedMemoryCache();
-//builder.Services.AddSession(options =>
-//{
-    //options.Cookie.HttpOnly = true;
-    //options.Cookie.IsEssential = true;
-//});
-
->>>>>>> f1c2c157e67d56361f2864e179a8c917da39a0d6
 var app = builder.Build();
 //app.UseSession();
 

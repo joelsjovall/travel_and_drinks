@@ -18,15 +18,5 @@
     "C:\\Users\\sigge\\.nuget\\packages\\system.windows.extensions\\8.0.0\\system.windows.extensions.8.0.0.nupkg.sha512",
     "C:\\Users\\sigge\\.nuget\\packages\\zstdsharp.port\\0.8.6\\zstdsharp.port.0.8.6.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problem reading the cache file C:\\Users\\sigge\\travel_and_drinks\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "C:\\Users\\sigge\\travel_and_drinks\\travel_and_drinks.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\sigge\\travel_and_drinks\\travel_and_drinks.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }
