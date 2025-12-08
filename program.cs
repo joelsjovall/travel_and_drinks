@@ -81,6 +81,14 @@ app.MapGet("/profile", Profile.Get);
 app.MapDelete("/db", db_reset_to_defaut);
 app.MapPost("/login", Login.Post);
 app.MapDelete("/login", Login.Delete);
+app.MapGet("/users", Users.GetAll);
+app.MapPost("/users", Users.Post);
+app.MapGet("/users/{id}", Users.Get);
+app.MapDelete("/users/{id}", Users.Delete);
+
+
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
