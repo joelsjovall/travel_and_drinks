@@ -1,4 +1,5 @@
  namespace server;
+
  using MySql.Data.MySqlClient;
 
  class Users
@@ -11,7 +12,7 @@
      {
          List<GetAll_Data> result = new();
          string query = "SELECT id, email, password FROM users";
-         using (var reader = await MySqlHelper.ExecuteReaderAsync(config.ConnectionString, query))
+         using (var reader = await MySqlHelper.ExecuteReaderAsync(db.ConnectionString, query))
          {
            while(reader.Read())
              {
@@ -54,7 +55,7 @@
              new("@password", user.Password),
          };
 
-         await MySqlHelper.ExecuteNonQueryAsync(config.ConnectionString, query, parameters);
+         await MySqlHelper.ExecuteNonQueryAsync(db.ConnectionString, query, parameters);
      }
 
      public static async Task
@@ -63,11 +64,6 @@
          string query = "DELETE FROM users WHERE id = @id";
          var parameters = new MySqlParameter[]{ new("@id", id) };
 
-         await MySqlHelper.ExecuteNonQueryAsync(config.ConnectionString, query, parameters);
+         await MySqlHelper.ExecuteNonQueryAsync(db.ConnectionString, query, parameters);
      }
- }
- public class Config
- {
-     public string ConnectionString { get; }
-     public Config(string connectionString) => ConnectionString = connectionString;
  }
