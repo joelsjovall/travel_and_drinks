@@ -14,7 +14,7 @@ static class Login
     Post(Post_Args credentials, Config config, HttpContext ctx)
     {
         bool result = false;
-        string query = "SELECT id FROM users WHERE email = @email AND password = @password";
+        string query = "SELECT user_id FROM users WHERE email = @email AND password = @password";
         var parameters = new MySqlParameter[]
         {
             new("email", credentials.Email),

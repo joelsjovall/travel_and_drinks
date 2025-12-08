@@ -81,6 +81,10 @@ app.MapGet("/profile", Profile.Get);
 app.MapDelete("/db", db_reset_to_defaut);
 app.MapPost("/login", Login.Post);
 app.MapDelete("/login", Login.Delete);
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 app.Run();
 
 async Task db_reset_to_defaut(Config config)
