@@ -13,7 +13,7 @@ static class Profile
             if (ctx.Session.GetInt32("user_id") is int user_id)
             {
 
-                string query = "SELECT email FROM users WHERE id = @id";
+                string query = "SELECT email FROM users WHERE user_id = @id";
                 var parameters = new MySqlParameter[] { new("@id", user_id) };
                 using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query, parameters))
                 {
