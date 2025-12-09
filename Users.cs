@@ -1,5 +1,6 @@
 namespace server;
 
+using System.Runtime.CompilerServices;
 using MySql.Data.MySqlClient;
 
 class Users
@@ -11,7 +12,7 @@ class Users
     GetAll(Config config)
     {
         List<GetAll_Data> result = new();
-        string query = "SELECT id, email, password FROM users";
+        string query = "SELECT user_id, email, password FROM users";
         using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query))
         {
             while (reader.Read())
@@ -27,7 +28,7 @@ class Users
     Get(int id, Config config)
     {
         Get_Data? result = null;
-        string query = "SELECT email, password FROM users WHERE id = @id";
+        string query = "SELECT email, password FROM users WHERE user_id = @id";
         var parameters = new MySqlParameter[] { new("@id", id) };
         using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query, parameters))
         {
@@ -58,10 +59,31 @@ class Users
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
     }
 
-    public static async Task
-    Delete(int id, Config config)
+    public record Put_Args(string Email, string Password); //data we wish to pudate
+
+    public static async Task Put(int id, Put_Args user, Config config)
     {
-        string query = "DELETE FROM users WHERE id = @id";
+        string query = """
+            UPDATE users 
+            SET email = @email, password = @password
+            WHERE user_id = @id                                 //ge förklrlaing till all denna kod
+            """;
+
+        var parameters = new MySqlParameter[]
+        {
+                new("id", id),
+                new("email", user.Email),
+                new("password", user.Password),
+        };
+
+        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+    }
+
+
+
+    public static async Task Delete(int id, Config config)
+    {
+        string query = "DELETE FROM users WHERE user_id = @id";
         var parameters = new MySqlParameter[] { new("@id", id) };
 
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
