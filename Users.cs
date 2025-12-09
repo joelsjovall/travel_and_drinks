@@ -60,23 +60,24 @@ class Users
     }
 
     public record Put_Args(string Email, string Password); //data we wish to pudate
-
-    public static async Task Put(int id, Put_Args user, Config config)
+    public static async Task Put(int id, Put_Args user, Config config)      //method when someone calls PUT/users/id
     {
         string query = """
             UPDATE users 
             SET email = @email, password = @password
-            WHERE user_id = @id                                 //ge förklrlaing till all denna kod
-            """;
+            WHERE user_id = @id                                 
+            """;                //SQL command that updates the users email/password 
 
-        var parameters = new MySqlParameter[]
+        var parameters = new MySqlParameter[]           // connects c# values to sql variables (id, email, password) 
         {
-                new("id", id),
-                new("email", user.Email),
-                new("password", user.Password),
+            new("@id", id),
+            new("@email", user.Email),
+            new("@password", user.Password),
         };
 
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+
+
+        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);       //runs the command towards the database
     }
 
 

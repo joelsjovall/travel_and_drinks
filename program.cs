@@ -19,6 +19,7 @@ app.UseSession();
 app.MapGet("/", () => "Hello World!");
 app.MapDelete("/login", Login.Delete);
 app.MapGet("/profile", Profile.Get);
+app.MapPost("/login", Login.Post);
 
 // CRUD users
 app.MapGet("users", Users.GetAll);                  //Get all users
@@ -26,6 +27,8 @@ app.MapGet("users/{id}", Users.Get);               //Get one user
 app.MapPost("/users", Users.Post);                // Create a user
 app.MapPut("/users/{id}", Users.Put);            // Update a user 
 app.MapDelete("/users/{id}", Users.Delete);     //Delete a user 
+
+
 
 if (app.Environment.IsDevelopment())
 {
