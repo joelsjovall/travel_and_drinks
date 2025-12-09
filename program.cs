@@ -17,7 +17,7 @@ app.UseSession();
 
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/profile", Profile.Get);
-app.MapDelete("/db", db_reset_to_defaut);
+//app.MapDelete("/db", db_reset_to_defaut);
 app.MapPost("/login", Login.Post);
 app.MapDelete("/login", Login.Delete);
 app.MapGet("/users", Users.GetAll);
@@ -34,7 +34,7 @@ if (app.Environment.IsDevelopment())
 }
 app.Run();
 
-async Task db_reset_to_defaut(Config config)
+/*async Task db_reset_to_defaut(Config config)
 {
     string create_users = """
     CREATE TABLE users
@@ -49,6 +49,6 @@ async Task db_reset_to_defaut(Config config)
     await MySqlHelper.ExecuteNonQueryAsync(config.db, create_users);
     await MySqlHelper.ExecuteNonQueryAsync(config.db, "INSERT INTO users(email, password) VALUES ('joel.sjovall.com', '123')");
     await MySqlHelper.ExecuteNonQueryAsync(config.db, "INSERT INTO users(email, password, name) VALUES ('mans.oskarsson.com', '123'), Måns");
-}
+}*/
 
 

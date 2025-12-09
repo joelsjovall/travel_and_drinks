@@ -11,7 +11,7 @@ class Users
     GetAll(Config config)
     {
         List<GetAll_Data> result = new();
-        string query = "SELECT id, email, password FROM users";
+        string query = "SELECT user_id, email, password FROM users";
         using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query))
         {
             while (reader.Read())
@@ -27,7 +27,7 @@ class Users
     Get(int id, Config config)
     {
         Get_Data? result = null;
-        string query = "SELECT email, password FROM users WHERE id = @id";
+        string query = "SELECT email, password FROM users WHERE user_id = @id";
         var parameters = new MySqlParameter[] { new("@id", id) };
         using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query, parameters))
         {
@@ -52,7 +52,7 @@ class Users
         var parameters = new MySqlParameter[]
         {
             new("@email", user.Email),
-            new("@password", user.Password),
+            new("@password", user.Password),    
         };
 
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
@@ -61,7 +61,7 @@ class Users
     public static async Task
     Delete(int id, Config config)
     {
-        string query = "DELETE FROM users WHERE id = @id";
+        string query = "DELETE FROM users WHERE user_id = @id";
         var parameters = new MySqlParameter[] { new("@id", id) };
 
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
