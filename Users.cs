@@ -60,11 +60,9 @@ class Users
     }
 
     public record Put_Args(string Email, string Password); //data we wish to pudate
-
-    public static async Task Put(int id, Put_Args user, Config config)
+    public static async Task 
+    Put(int id, Put_Args user, Config config)
     {
-<<<<<<< HEAD
-=======
         string query = """
             UPDATE users 
             SET email = @email, password = @password
@@ -73,9 +71,9 @@ class Users
 
         var parameters = new MySqlParameter[]
         {
-                new("id", id),
-                new("email", user.Email),
-                new("password", user.Password),
+                new("@id", id),
+                new("@email", user.Email),
+                new("@password", user.Password),
         };
 
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
@@ -83,9 +81,9 @@ class Users
 
 
 
-    public static async Task Delete(int id, Config config)
+    public static async Task 
+    Delete(int id, Config config)
     {
->>>>>>> fc11362b4e91d5d4d0c95fed37327ec01605e1b3
         string query = "DELETE FROM users WHERE user_id = @id";
         var parameters = new MySqlParameter[] { new("@id", id) };
 
