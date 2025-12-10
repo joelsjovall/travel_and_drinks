@@ -3,7 +3,11 @@ using System.ComponentModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
+<<<<<<< HEAD
 Config config = new("server=127.0.0.1;uid=root;pwd=kebab123;database=d_a_t");
+=======
+Config config = new("server=127.0.0.1;uid=root;pwd=Mans010101!;database=dranks_and_travel");
+>>>>>>> de59265d068e167465892de9ee47205fa914ea27
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
@@ -29,8 +33,6 @@ app.MapPut("/users/{id}", Users.Put);
 app.MapDelete("/users/{id}", Users.Delete);
     //Delete a user 
 
-
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -38,22 +40,5 @@ if (app.Environment.IsDevelopment())
 app.Run();
 
 
-
-// async Task db_reset_to_defaut(Config config)
-// {
-//     string create_users = """
-//     CREATE TABLE users
-//     (
-//     id INT PRIMARY KEY AUTO_INCREMENT,
-//     email VARCHAR(100) NOT NULL UNIQUE,
-//     password VARCHAR(128),
-//     name VARCHAR(255)
-//     )
-//     """;
-//     await MySqlHelper.ExecuteNonQueryAsync(config.db, "DROP TABLE IF EXISTS users");
-//     await MySqlHelper.ExecuteNonQueryAsync(config.db, create_users);
-//     await MySqlHelper.ExecuteNonQueryAsync(config.db, "INSERT INTO users(email, password) VALUES ('joel.sjovall.com', '123')");
-//     await MySqlHelper.ExecuteNonQueryAsync(config.db, "INSERT INTO users(email, password, name) VALUES ('mans.oskarsson.com', '123'), Måns");
-// }
 
 
