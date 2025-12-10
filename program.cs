@@ -3,11 +3,7 @@ using System.ComponentModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
-<<<<<<< HEAD
 Config config = new("server=127.0.0.1;uid=root;pwd=kebab123;database=d_a_t");
-=======
-Config config = new("server=127.0.0.1;uid=root;pwd=Mans010101!;database=dranks_and_travel");
->>>>>>> de59265d068e167465892de9ee47205fa914ea27
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
@@ -20,7 +16,6 @@ var app = builder.Build();
 app.UseSession();
 
 //authenticate
-app.MapGet("/", () => "Hello World!");
 app.MapDelete("/login", Login.Delete);
 app.MapGet("/profile", Profile.Get);
 app.MapPost("/login", Login.Post);
@@ -31,6 +26,11 @@ app.MapGet("users/{id}", Users.Get);               //Get one user
 app.MapPost("/users", Users.Post);                // Create a user
 app.MapPut("/users/{id}", Users.Put);
 app.MapDelete("/users/{id}", Users.Delete);
+app.MapGet("/cities", async (string? search, Config config) =>
+{
+    return await Cities.Get(search, config);
+});
+
     //Delete a user 
 
 if (app.Environment.IsDevelopment())
