@@ -26,6 +26,10 @@ app.MapGet("users/{id}", Users.Get);               //Get one user
 app.MapPost("/users", Users.Post);                // Create a user
 app.MapPut("/users/{id}", Users.Put);
 app.MapDelete("/users/{id}", Users.Delete);
+app.MapPost("/cities/search", async (CitySearchRequest request, Config config) =>
+{
+    return await Cities.Get(request.City, config);
+});
 app.MapGet("/cities", async (string? search, Config config) =>
 {
     return await Cities.Get(search, config);
