@@ -7,16 +7,16 @@ class Users
 {
 
 
-    public record GetAll_Data(int Id, string Email, string Password);
-    public static async Task<List<GetAll_Data>>
+    public record GetAll_Data(int Id, string Email, string Password);       //hämtar all data
+    public static async Task<List<GetAll_Data>>  //hämtar lista med ALLA users från databasen
     GetAll(Config config)
     {
         List<GetAll_Data> result = new();
-        string query = "SELECT user_id, email, password FROM users";
-        using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query))
+        string query = "SELECT user_id, email, password FROM users";        //hämtar alla rader i users-tabellen
+        using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query)) //kör sql kommandot och läser varje rad för rad 
         {
             while (reader.Read())
-            {
+            {       //lägger till varje ny rad i listan GetAll_Data
                 result.Add(new(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
             }
         }

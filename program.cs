@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
-Config config = new("server=127.0.0.1;uid=root;pwd=Mans010101!;database=dranks_and_travel");
+Config config = new("server=127.0.0.1;uid=root;pwd=bUmvi6vj;database=drinks_and_travels");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
@@ -28,6 +28,13 @@ app.MapPost("/users", Users.Post);                // Create a user
 app.MapPut("/users/{id}", Users.Put);            // Update a user 
 app.MapDelete("/users/{id}", Users.Delete);     //Delete a user 
 
+
+//CRUD countries
+app.MapGet("countries", Countries.GetAll);              //Get all countries
+app.MapGet("/countries/{id}", Countries.Get);          //Get one country
+app.MapPost("/countries", Countries.Post);            //Create/add a country
+app.MapPut("/countries/{id}", Countries.Put);        //Update country
+app.MapDelete("/delete/{id}", Countries.Delete);    //Delete country
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
