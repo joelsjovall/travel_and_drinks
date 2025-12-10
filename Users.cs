@@ -60,12 +60,7 @@ class Users
     }
 
     public record Put_Args(string Email, string Password); //data we wish to pudate
-<<<<<<< HEAD
-    public static async Task 
-    Put(int id, Put_Args user, Config config)
-=======
     public static async Task Put(int id, Put_Args user, Config config)      //method when someone calls PUT/users/id
->>>>>>> fdbb93dac0103618f5a676d07beb0d43d45a84b4
     {
         string query = """
             UPDATE users 
@@ -75,15 +70,9 @@ class Users
 
         var parameters = new MySqlParameter[]           // connects c# values to sql variables (id, email, password) 
         {
-<<<<<<< HEAD
-                new("@id", id),
-                new("@email", user.Email),
-                new("@password", user.Password),
-=======
             new("@id", id),
             new("@email", user.Email),
             new("@password", user.Password),
->>>>>>> fdbb93dac0103618f5a676d07beb0d43d45a84b4
         };
 
 

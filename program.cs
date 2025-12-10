@@ -19,12 +19,8 @@ app.UseSession();
 app.MapGet("/", () => "Hello World!");
 app.MapDelete("/login", Login.Delete);
 app.MapGet("/profile", Profile.Get);
-<<<<<<< HEAD
-app.MapPost("/login",Login.Post);
-=======
 app.MapPost("/login", Login.Post);
 
->>>>>>> fdbb93dac0103618f5a676d07beb0d43d45a84b4
 // CRUD users
 app.MapGet("users", Users.GetAll);                  //Get all users
 app.MapGet("users/{id}", Users.Get);               //Get one user
