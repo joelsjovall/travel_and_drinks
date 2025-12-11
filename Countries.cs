@@ -10,34 +10,56 @@ class Countries
     public static async Task<List<GetAll_Data>>
     GetAll(Config config)
     {
-        List<GetAll_Data> result = new();
-        string query = "SELECT country_id, name FROM countries";
+        List<GetAll_Data> result = new();           //Creates empty list to fill rows from the database
+        string query = "SELECT country_id, name FROM countries";        //fetch all countries
         using (var reader = await MySqlHelper.
-        ExecuteReaderAsync(config.db, query))
+        ExecuteReaderAsync(config.db, query))           //
         {
-            while (reader.Read())
+            while (reader.Read())           //loops through every row 
             {
-                result.Add(new(reader.GetInt32(0),
-                reader.GetString(1)));
+                result.Add(new(reader.GetInt32(0),      //reads column 0(country_id) as int and column 1 (name) as a string
+                reader.GetString(1)));      //creates a new getall data record and adds to the list
             }
         }
-        return result;
+        return result;      //returns list of all countries 
     }
 
-    public record Get_Data(int country_id, string name);
+    public record City_Data(int City_id, string Name);         //record for citys that belong to a country
+    public record Get_Data(int country_id, string name, List<City_Data> Cities);
     public static async Task<Get_Data?>
 
     Get(int id, Config config)
     {
-        Get_Data? result = null;
-        string query = "SELECT country_id, name FROM countries WHERE country_id = @id";
-        var parameters = new MySqlParameter[] { new("@id", id) };
+        Get_Data? result = null;        //assumes no country is found
+        string query = """
+        SELECT c.country_id, c.name, ci.city_id, ci.name 
+        FROM countries c
+        LEFT JOIN cities ci ON ci.country_id = c.country_id
+        WHERE c.country_id = @id
+        """;
+        var parameters = new MySqlParameter[] { new("@id", id) };       //creates parameterlist 
         using (var reader = await MySqlHelper.
         ExecuteReaderAsync(config.db, query, parameters))
         {
-            if (reader.Read())
+            List<City_Data> cities = new();
+            int countryId = 0;
+            string countryName = "";
+
+            while (reader.Read())
             {
-                result = new(reader.GetInt32(0), reader.GetString(1));
+                if (result is null)
+                {
+                    countryId = reader.GetInt32(0);
+                    countryName = reader.GetString(1);
+                }
+
+                if (!reader.IsDBNull(2))
+                {
+                    int cityId = reader.GetInt32(2);
+                    string cityName = reader.GetString(3);
+                    cities.Add(new City_Data(cityId, cityName));
+                }
+                result = new(countryId, countryName, cities);
             }
         }
         return result;
@@ -46,10 +68,10 @@ class Countries
     public record Post_Args(string Name);
     public static async Task
 
-    Post(Post_Args country, Config config)
+    Post(Post_Args country, Config config)      //create/add a new country
     {
-        string query = """
-            INSERT INTO countries(name)
+        string query = """          
+            INSERT INTO countries(name)     
             VALUES(@name)
             """;
 
@@ -63,7 +85,7 @@ class Countries
 
     public record Put_Args(string Name);
     public static async Task
-    Put(int id, Put_Args country, Config config)
+    Put(int id, Put_Args country, Config config)        //sql command to update a country
     {
         string query = """
             UPDATE countries
@@ -89,4 +111,4 @@ class Countries
         };
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
     }
-}
+}       //we need a delete function for the admin to be able to delete a country if there are no available events anymore
