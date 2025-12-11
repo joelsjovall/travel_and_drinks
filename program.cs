@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
+
 Config config = new("server=127.0.0.1;uid=root;pwd=kebab123;database=d_a_t");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
@@ -26,14 +27,16 @@ app.MapGet("users/{id}", Users.Get);               //Get one user
 app.MapPost("/users", Users.Post);                // Create a user
 app.MapPut("/users/{id}", Users.Put);
 app.MapDelete("/users/{id}", Users.Delete);
-app.MapPost("/cities/search", async (CitySearchRequest request, Config config) =>
-{
-    return await Cities.Get(request.City, config);
-});
 app.MapGet("/cities", async (string? search, Config config) =>
 {
     return await Cities.Get(search, config);
 });
+app.MapPost("/cities", Cities.Post);            //Create/add a city
+app.MapPut("/cities", Cities.Put);        //Update country
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
     //Delete a user 
 
@@ -49,6 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 app.Run();
+
 
 
 
