@@ -24,6 +24,37 @@ class Countries
         return result;      //returns list of all countries 
     }
 
+    public static async Task<List<GetAll_Data>> Search(string? search, Config config)
+    {
+        // Om ingen sökterm → använd vanliga GetAll()
+        if (string.IsNullOrEmpty(search))
+        {
+            return await GetAll(config);
+        }
+
+        List<GetAll_Data> result = new();
+
+        string query = """
+            SELECT country_id, name
+            FROM countries
+            WHERE name LIKE @search
+        """;
+
+        var parameters = new MySqlParameter[]
+        {
+            new("@search", "%" + search + "%")
+        };
+
+        using (var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query, parameters))
+        {
+            while (reader.Read())
+            {
+                result.Add(new(reader.GetInt32(0), reader.GetString(1)));
+            }
+        }
+
+        return result;
+    }
     public record City_Data(int City_id, string Name);         //record for citys that belong to a country
     public record Get_Data(int country_id, string name, List<City_Data> Cities);
     public static async Task<Get_Data?>
