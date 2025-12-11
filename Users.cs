@@ -53,7 +53,7 @@ class Users
         var parameters = new MySqlParameter[]
         {
             new("@email", user.Email),
-            new("@password", user.Password),
+            new("@password", user.Password),    
         };
 
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
@@ -82,7 +82,8 @@ class Users
 
 
 
-    public static async Task Delete(int id, Config config)
+    public static async Task 
+    Delete(int id, Config config)
     {
         string query = "DELETE FROM users WHERE user_id = @id";
         var parameters = new MySqlParameter[] { new("@id", id) };
