@@ -32,7 +32,7 @@ app.MapGet("/cities", async (string? search, Config config) =>
     return await Cities.Get(search, config);
 });
 app.MapPost("/cities", Cities.Post);            //Create/add a city
-app.MapPut("/cities", Cities.Put);        //Update country
+app.MapPut("/cities", Cities.Put);        //Update city
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
