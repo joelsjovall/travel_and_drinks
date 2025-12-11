@@ -2,6 +2,7 @@
 
 namespace server;
 
+
 static class Login
 {
     public static void Delete(HttpContext ctx)
