@@ -42,11 +42,14 @@ if (app.Environment.IsDevelopment())
 
 
 //CRUD countries
-app.MapGet("countries", Countries.GetAll);              //Get all countries
+app.MapGet("countries", Countries.Search);              //Get all countries/search all countries
 app.MapGet("/countries/{id}", Countries.Get);          //Get one country
 app.MapPost("/countries", Countries.Post);            //Create/add a country
 app.MapPut("/countries/{id}", Countries.Put);        //Update country
 app.MapDelete("/delete/{id}", Countries.Delete);    //Delete country
+
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
