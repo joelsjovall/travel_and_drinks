@@ -3,6 +3,8 @@ using System.ComponentModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
+
+
 Config config = new("server=127.0.0.1;uid=root;pwd=Tycker512;database=drinks_and_travels");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
@@ -45,7 +47,44 @@ app.MapGet("/hotels", async (
     return await Hotels.Get(country_id, city_id, search, config);
 });
 
+
     //Delete a user 
+
+app.MapPut("/hotels/{id}", async (int id, Hotels.UpdateHotel_Data data, Config config) =>
+{
+    bool updated = await Hotels.Update(id, data, config);
+    return updated ? Results.Ok() : Results.NotFound();
+});
+
+app.MapDelete("/hotels/{id}", async (int id, Config config) =>
+{
+    bool deleted = await Hotels.Delete(id, config);
+    return deleted ? Results.Ok() : Results.NotFound();
+});
+
+app.MapPost("/hotels", async (Hotels.CreateHotel_Data data, Config config) =>
+{
+    int id = await Hotels.Create(data, config);
+    return Results.Ok(new { hotel_id = id });
+});
+
+//Delete a user 
+
+
+//CRUD countries
+app.MapGet("countries", Countries.Search);              //Get all countries/search all countries
+app.MapGet("/countries/{id}", Countries.Get);          //Get one country
+app.MapPost("/countries", Countries.Post);            //Create/add a country
+app.MapPut("/countries/{id}", Countries.Put);        //Update country
+app.MapDelete("/delete/{id}", Countries.Delete);    //Delete country
+
+//CRUD Events
+app.MapGet("events", Events.Search);
+app.MapGet("/events/{id}", Events.Get);
+app.MapPost("/events", Events.Post);
+app.MapPut("/events/{id}",Events.Put);
+app.MapDelete("/events/{id}", Events.Delete);
+
 
 if (app.Environment.IsDevelopment())
 {
