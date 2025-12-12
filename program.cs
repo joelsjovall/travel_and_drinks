@@ -86,6 +86,23 @@ app.MapPost("/events", Events.Post);
 app.MapPut("/events/{id}", Events.Put);
 app.MapDelete("/events/{id}", Events.Delete);
 
+//Hotel ratings
+// app.MapGet("/hotels/{hotelId}ratings", HotelRatings.GetByHotel);
+// app.MapGet("/hotels/{hotelId}/ratings", HotelRatings.Post);
+
+// fetch all ratings
+app.MapGet("/hotels/{hotelId}/ratings", async (int hotelId, Config config) =>
+{
+    return await HotelRatings.GetByHotel(hotelId, config);
+});
+
+// Create new rating 
+app.MapPost("/hotels/{hotelId}/ratings", async (int hotelId, HotelRatings.Post_Args rating, Config config) =>
+{
+    await HotelRatings.Post(hotelId, rating, config);
+    return Results.Ok();
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
