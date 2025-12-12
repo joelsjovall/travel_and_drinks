@@ -115,7 +115,7 @@ app.MapPost("/events/{eventId}/ratings", async (int eventId, EventRatings.Post_A
     await EventRatings.Post(eventId, rating, config);
     return Results.Ok();
 });
-
+//denna typ av kod används för att i ratings endpoints har flera parameters, och minimal api behöver veta exakt var varje parameter kommer ifrån, därför kan man ej ha mapPost här i ratings.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
