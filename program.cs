@@ -38,15 +38,25 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-// HOTELS
-app.MapGet("/hotels", async (
-    int? country_id,
-    int? city_id,
-    string? search,
-    Config config) =>
+app.MapPut("/hotels/{id}", async (int id, Hotels.UpdateHotel_Data data, Config config) =>
 {
-    return await Hotels.Get(country_id, city_id, search, config);
+    bool updated = await Hotels.Update(id, data, config);
+    return updated ? Results.Ok() : Results.NotFound();
 });
+
+app.MapDelete("/hotels/{id}", async (int id, Config config) =>
+{
+    bool deleted = await Hotels.Delete(id, config);
+    return deleted ? Results.Ok() : Results.NotFound();
+});
+
+app.MapPost("/hotels", async (Hotels.CreateHotel_Data data, Config config) =>
+{
+    int id = await Hotels.Create(data, config);
+    return Results.Ok(new { hotel_id = id });
+});
+
+
 
 //Delete a user 
 
@@ -62,7 +72,7 @@ app.MapDelete("/delete/{id}", Countries.Delete);    //Delete country
 app.MapGet("events", Events.Search);
 app.MapGet("/events/{id}", Events.Get);
 app.MapPost("/events", Events.Post);
-app.MapPut("/events/{id}",Events.Put);
+app.MapPut("/events/{id}", Events.Put);
 app.MapDelete("/events/{id}", Events.Delete);
 
 if (app.Environment.IsDevelopment())
