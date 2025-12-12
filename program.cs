@@ -86,6 +86,36 @@ app.MapPost("/events", Events.Post);
 app.MapPut("/events/{id}", Events.Put);
 app.MapDelete("/events/{id}", Events.Delete);
 
+//Hotel ratings
+// app.MapGet("/hotels/{hotelId}ratings", HotelRatings.GetByHotel);
+// app.MapGet("/hotels/{hotelId}/ratings", HotelRatings.Post);
+
+// fetch all ratings(hotels)
+app.MapGet("/hotels/{hotelId}/ratings", async (int hotelId, Config config) =>
+{
+    return await HotelRatings.GetByHotel(hotelId, config);
+});
+
+// Create new rating(hotels)
+app.MapPost("/hotels/{hotelId}/ratings", async (int hotelId, HotelRatings.Post_Args rating, Config config) =>
+{
+    await HotelRatings.Post(hotelId, rating, config);
+    return Results.Ok();
+});
+
+//fetch all ratings(events)
+app.MapGet("/events/{eventId}/ratings", async (int eventId, Config config) =>
+{
+    return await EventRatings.GetByEvent(eventId, config);
+});
+
+// Create new rating(events)
+app.MapPost("/events/{eventId}/ratings", async (int eventId, EventRatings.Post_Args rating, Config config) =>
+{
+    await EventRatings.Post(eventId, rating, config);
+    return Results.Ok();
+});
+//denna typ av kod används för att i ratings endpoints har flera parameters, och minimal api behöver veta exakt var varje parameter kommer ifrån, därför kan man ej ha mapPost här i ratings.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
