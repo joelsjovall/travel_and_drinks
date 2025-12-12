@@ -4,7 +4,11 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
 
+<<<<<<< HEAD
 Config config = new("server=127.0.0.1;uid=root;pwd=kebab123;database=d_a_t");
+=======
+Config config = new("server=127.0.0.1;uid=root;pwd=Mans010101!;database=dranks_and_travel");
+>>>>>>> 1590a98f983fabcf5519d83a3f413ed5af6a8425
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
@@ -58,7 +62,12 @@ app.MapPost("/countries", Countries.Post);            //Create/add a country
 app.MapPut("/countries/{id}", Countries.Put);        //Update country
 app.MapDelete("/delete/{id}", Countries.Delete);    //Delete country
 
-
+//CRUD Events
+app.MapGet("events", Events.Search);
+app.MapGet("/events/{id}", Events.Get);
+app.MapPost("/events", Events.Post);
+app.MapPut("/events/{id}",Events.Put);
+app.MapDelete("/events/{id}", Events.Delete);
 
 if (app.Environment.IsDevelopment())
 {
