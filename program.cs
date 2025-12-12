@@ -38,7 +38,17 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-    //Delete a user 
+// HOTELS
+app.MapGet("/hotels", async (
+    int? country_id,
+    int? city_id,
+    string? search,
+    Config config) =>
+{
+    return await Hotels.Get(country_id, city_id, search, config);
+});
+
+//Delete a user 
 
 
 //CRUD countries
