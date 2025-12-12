@@ -7,7 +7,7 @@ public record CitySearchRequest(string? City);
 
 class Cities
 {
- public record GetAll_Data(int city_id, int country_id, string name,string country_name);
+ public record GetAll_Data(int city_id, int country_id, string name,string country_name,string eventName,string hotelname);
 
     public static async Task<List<GetAll_Data>> 
     Get(string? searchTerm, Config config)
@@ -20,23 +20,32 @@ class Cities
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             // Om sökterm finns använd LIKE
-            query =  """
-            SELECT c.city_id, c.country_id, c.name AS city_name, co.name AS country_name
-            FROM d_a_t.cities c
-            JOIN d_a_t.countries co ON c.country_id = co.country_id
-            WHERE c.name LIKE @search
-            """;
+            query =   """
+        SELECT c.city_id, c.country_id, c.name AS city_name, 
+        co.name AS country_name,
+         e.name AS event_name,
+          h.name AS hotel_name
+        FROM d_a_t.cities c
+        JOIN d_a_t.countries co ON c.country_id = co.country_id
+        LEFT JOIN d_a_t.events e ON e.city_id = c.city_id
+        LEFT JOIN d_a_t.hotels h ON h.city_id = c.city_id
+        WHERE c.name LIKE @search
+        """;
             parameters = new MySqlParameter[] { new("@search", "%" + searchTerm + "%") };
         }
         else
         {
             // Ingen sökterm hämta alla
             query = """
-    SELECT c.city_id, c.country_id, c.name AS city_name, 
-           co.name AS country_name
-    FROM d_a_t.cities c
-    JOIN d_a_t.countries co ON c.country_id = co.country_id
-    """;
+        SELECT c.city_id, c.country_id, c.name AS city_name, 
+               co.name AS country_name,
+               e.name AS event_name,
+                h.name AS hotel_name
+        FROM d_a_t.cities c
+        JOIN d_a_t.countries co ON c.country_id = co.country_id
+        LEFT JOIN d_a_t.events e ON e.city_id = c.city_id
+         LEFT JOIN d_a_t.hotels h ON h.city_id = c.city_id
+        """;
             parameters = Array.Empty<MySqlParameter>();
         }
 
@@ -48,7 +57,9 @@ class Cities
                     reader.GetInt32(0),
                     reader.GetInt32(1),
                     reader.GetString(2),
-                    reader.GetString(3)
+                    reader.GetString(3),
+                     reader.IsDBNull(4) ? "There is not event going on here right now" : reader.GetString(4), // hantera null
+                     reader.IsDBNull(5)?"There is not hotel in this city yet": reader.GetString(5)
                 ));
             }
         }

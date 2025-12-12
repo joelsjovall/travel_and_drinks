@@ -1,6 +1,22 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
+    "C:\\Users\\sigge\\travel_and_drinks\\travel_and_drinks.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\sigge\\travel_and_drinks\\travel_and_drinks.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\sigge\\travel_and_drinks\\travel_and_drinks.csproj",
+        "projectName": "travel_and_drinks",
+        "projectPath": "C:\\Users\\sigge\\travel_and_drinks\\travel_and_drinks.csproj",
+        "packagesPath": "C:\\Users\\sigge\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sigge\\travel_and_drinks\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\sigge\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
     "C:\\Users\\joels\\repos\\travel_and_drinks\\travel_and_drinks.csproj": {}
   },
   "projects": {
@@ -15,6 +31,7 @@
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\joels\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> 24118d6132d119cb52795dda242641d7c5d875f3
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -68,7 +85,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
+=======
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+>>>>>>> 24118d6132d119cb52795dda242641d7c5d875f3
         }
       }
     }
