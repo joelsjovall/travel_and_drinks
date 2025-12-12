@@ -86,6 +86,12 @@ app.MapPost("/events", Events.Post);
 app.MapPut("/events/{id}", Events.Put);
 app.MapDelete("/events/{id}", Events.Delete);
 
+app.MapGet("bookings", Bookings.Search);
+app.MapGet("/bookings/joined", Bookings.GetAllJoined);   //Get all with users hotel and events with names and not only ids
+app.MapPost("/bookings", Bookings.Post);
+app.MapPut("/bookings/{id}", Bookings.Put);
+app.MapDelete("/bookings/{id}", Bookings.Delete);
+
 //Hotel ratings
 // app.MapGet("/hotels/{hotelId}ratings", HotelRatings.GetByHotel);
 // app.MapGet("/hotels/{hotelId}/ratings", HotelRatings.Post);
