@@ -594,19 +594,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\måns\\.nuget\\packages\\": {}
+    "C:\\Users\\joels\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\måns\\travel_and_drinks\\travel_and_drinks.csproj",
+      "projectUniqueName": "C:\\Users\\joels\\repos\\travel_and_drinks\\travel_and_drinks.csproj",
       "projectName": "travel_and_drinks",
-      "projectPath": "C:\\Users\\måns\\travel_and_drinks\\travel_and_drinks.csproj",
-      "packagesPath": "C:\\Users\\måns\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\måns\\travel_and_drinks\\obj\\",
+      "projectPath": "C:\\Users\\joels\\repos\\travel_and_drinks\\travel_and_drinks.csproj",
+      "packagesPath": "C:\\Users\\joels\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\joels\\repos\\travel_and_drinks\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\måns\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\joels\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -660,7 +660,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

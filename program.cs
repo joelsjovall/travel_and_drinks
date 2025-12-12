@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
 
-Config config = new("server=127.0.0.1;uid=root;pwd=Mans010101!;database=dranks_and_travel");
+Config config = new("server=127.0.0.1;uid=root;pwd=bUmvi6vj;database=drinks_and_travels");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
@@ -39,6 +39,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // HOTELS
+
 app.MapGet("/hotels", async (
     int? country_id,
     int? city_id,
@@ -47,6 +48,26 @@ app.MapGet("/hotels", async (
 {
     return await Hotels.Get(country_id, city_id, search, config);
 });
+
+app.MapPost("/hotels", async (Hotels.CreateHotel_Data data, Config config) =>
+{
+    int id = await Hotels.Create(data, config);
+    return Results.Ok(new { hotel_id = id });
+});
+
+app.MapPut("/hotels/{id}", async (int id, Hotels.UpdateHotel_Data data, Config config) =>
+{
+    bool updated = await Hotels.Update(id, data, config);
+    return updated ? Results.Ok() : Results.NotFound();
+});
+
+app.MapDelete("/hotels/{id}", async (int id, Config config) =>
+{
+    bool deleted = await Hotels.Delete(id, config);
+    return deleted ? Results.Ok() : Results.NotFound();
+});
+
+
 
 //Delete a user 
 
@@ -62,7 +83,7 @@ app.MapDelete("/delete/{id}", Countries.Delete);    //Delete country
 app.MapGet("events", Events.Search);
 app.MapGet("/events/{id}", Events.Get);
 app.MapPost("/events", Events.Post);
-app.MapPut("/events/{id}",Events.Put);
+app.MapPut("/events/{id}", Events.Put);
 app.MapDelete("/events/{id}", Events.Delete);
 
 if (app.Environment.IsDevelopment())
