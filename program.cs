@@ -3,12 +3,8 @@ using System.ComponentModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
-<<<<<<< HEAD
 
 Config config = new("server=127.0.0.1;uid=root;pwd=kebab123;database=d_a_t");
-=======
-Config config = new("server=127.0.0.1;uid=root;pwd=bUmvi6vj;database=drinks_and_travels");
->>>>>>> dfcfe9092fe1958ab75024a7996fc4d2d27dff24
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
