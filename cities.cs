@@ -63,28 +63,37 @@ class Cities
                 ));
             }
         }
-
         return result;
     }
 
-
-
-   public record Post_Args(string Name,int country_id);
+    
+   public record Post_Args(string Name,int country_id, string user_email);
    public static async Task
  Post(Post_Args city, Config config)
-{
+{         
+
+    
     string query = """
+     
         INSERT INTO cities(name, country_id)
-        VALUES(@name, @country_id)
+        SELECT @name , @country_id
+        FROM
+         users where email = @user_email
+        AND admin = true
         """;
 
     var parameters = new MySqlParameter[]
     {
+        new("@user_email", city.user_email),   
         new("@name", city.Name),
         new("@country_id", city.country_id)
     };
+int rowsA = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
 
-    await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+if (rowsA == 0)
+{
+    throw new UnauthorizedAccessException("User is not admin, booking not allowed.");
+}
 }
 
 
