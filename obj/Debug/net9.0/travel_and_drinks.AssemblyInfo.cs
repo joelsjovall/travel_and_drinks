@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("travel_and_drinks")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+256b846528cd15644e0546ca8752e261c0e7d5e9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+502837819d5bb27c3093681803a4ba1ca4516786")]
 [assembly: System.Reflection.AssemblyProductAttribute("travel_and_drinks")]
 [assembly: System.Reflection.AssemblyTitleAttribute("travel_and_drinks")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
