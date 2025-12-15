@@ -88,13 +88,17 @@ class Cities
         new("@name", city.Name),
         new("@country_id", city.country_id)
     };
-int rowsA = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+ await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
 
-if (rowsA == 0)
-{
-    throw new UnauthorizedAccessException("User is not admin, booking not allowed.");
 }
-}
+/*
+  
+  "user_email": "kebaiburk",
+   "name": "Falafeltown",
+   "country_id": 3
+  */
+ 
+
 
 
     public record Put_Args(int countryid, string Name,int cityid);
