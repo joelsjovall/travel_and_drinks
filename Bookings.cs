@@ -74,7 +74,8 @@ class Bookings
         int user_id,
         int? hotel_id,
         int? event_id,
-        int total_price
+        int total_price,
+        int people_count
     );
 
     public static async Task Post(Post_Args booking, Config config)   
@@ -87,24 +88,58 @@ class Bookings
     }
     */
     {
-        string query = """ INSERT INTO bookings (user_id, hotel_id, event_id, total_price) VALUES (@user_id, @hotel_id, @event_id, @total_price) """;
+        if (booking.hotel_id != null) //reduce avaliable rooms
+        {
+            string hotelQuery = """ UPDATE hotels SET available_rooms = available_rooms - @count WHERE hotel_id = @hotel_id AND available_rooms >= @count """;
+            var hotelParameter = new MySqlParameter[]
+            {
+                new("@count", booking.people_count),
+                new("@hotel_id", booking.hotel_id)
+            };
 
-        var p = new MySqlParameter[]
+            int rows = await MySqlHelper.ExecuteNonQueryAsync(config.db, hotelQuery, hotelParameter);
+
+            if (rows == 0)
+                throw new Exception("Not enough available hotel rooms");
+        }
+
+        if (booking.event_id != null)  //reduce event seats
+        {
+            string eventQuery = """ UPDATE events SET available_seats = available_seats - @count WHERE event_id = @event_id AND available_seats >= @count """;
+
+            var eventParameter = new MySqlParameter[]
+            {
+                new("@count", booking.people_count),
+                new("@event_id", booking.event_id)
+            };
+
+            int rows = await MySqlHelper.ExecuteNonQueryAsync(config.db, eventQuery, eventParameter);
+
+            if (rows == 0)
+            throw new Exception("Not enough available event seats");
+        }
+        
+
+        string query = """ INSERT INTO bookings (user_id, hotel_id, event_id, people_count, total_price) VALUES (@user_id, @hotel_id, @event_id, @people_count, @total_price) """;
+
+        var bookingParameter = new MySqlParameter[]
         {
             new("@user_id", booking.user_id),
             new("@hotel_id", booking.hotel_id),
             new("@event_id", booking.event_id),
+            new("@people_count", booking.people_count),
             new("@total_price", booking.total_price)
         };
 
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, p);
+        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, bookingParameter);
     }
 
     public record Put_Args(
         int user_id,
         int? hotel_id,
         int? event_id,
-        int total_price
+        int total_price,
+        int people_count
     );
 
     public static async Task Put(int id, Put_Args booking, Config config) 
@@ -133,12 +168,32 @@ class Bookings
 
     public static async Task Delete(int id, Config config)  //DELETE http://localhost:5000/bookings/5
     {
-        string query = "DELETE FROM bookings WHERE booking_id = @id";
+        string select = """SELECT hotel_id, event_id, people_count FROM bookings WHERE booking_id = @id""";
 
-        var p = new MySqlParameter[]
-        {
-            new("@id", id)
-        };
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, p);
+        using var reader = await MySqlHelper.ExecuteReaderAsync(config.db, select, new MySqlParameter("@id", id));
+
+        if (!reader.Read())
+        return;
+
+        int people = Convert.ToInt32(reader["people_count"]);
+        int? hotelId = reader["hotel_id"] == DBNull.Value ? null : Convert.ToInt32(reader["hotel_id"]);
+        int? eventId = reader["event_id"] == DBNull.Value ? null : Convert.ToInt32(reader["event_id"]);
+
+        reader.Close();
+
+        if (hotelId != null)
+            await MySqlHelper.ExecuteNonQueryAsync(config.db, "UPDATE events SET available_seats = available_seats + @count WHERE event_id = @id", 
+            new MySqlParameter("@count", people), 
+            new MySqlParameter("@id", hotelId));
+
+        if (eventId != null)
+            await MySqlHelper.ExecuteNonQueryAsync(config.db, "UPDATE events SET available_seats = avaliable_seats + @count WHERE event_id = @id",
+            new MySqlParameter("@count", people),
+            new MySqlParameter("@id", eventId));
+
+
+
+        await MySqlHelper.ExecuteNonQueryAsync(config.db, "DELETE FROM bookings WHERE booking_id = @id",
+        new MySqlParameter("@id", id));
     }
 }
