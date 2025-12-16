@@ -100,7 +100,7 @@ class Cities
 }
 /*
   
-  "user_email": "kebaiburk",
+  "user_id": "3(eller id,et som är admin)",
    "name": "Falafeltown",
    "country_id": 3
   */
