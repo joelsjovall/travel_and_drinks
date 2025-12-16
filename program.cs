@@ -67,8 +67,7 @@ app.MapDelete("/hotels/{id}", async (int id, Config config) =>
     return deleted ? Results.Ok() : Results.NotFound();
 });
 
-// Get all bookings for a user
-app.MapGet("/users/{userId}/bookings", Bookings.GetByUser);
+
 
 
 

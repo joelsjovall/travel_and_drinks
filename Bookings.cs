@@ -143,36 +143,4 @@ class Bookings
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query, p);
     }
 
-    // Get all bookings for a user
-    public static async Task<List<Joined_Data>> GetByUser(int userId, Config config)
-    {
-        List<Joined_Data> result = new();
-
-        string query = """
-        SELECT b.booking_id, u.user_id, u.email,
-               h.hotel_id, h.name,
-               e.event_id, e.name,
-               b.total_price
-        FROM bookings b
-        JOIN users u ON u.user_id = b.user_id
-        LEFT JOIN hotels h ON h.hotel_id = b.hotel_id
-        LEFT JOIN events e ON e.event_id = b.event_id
-        WHERE b.user_id = @userId
-    """;
-
-        var p = new MySqlParameter[]
-        {
-        new("@userId", userId)
-        };
-
-        using var reader = await MySqlHelper.ExecuteReaderAsync(config.db, query, p);
-
-        while (reader.Read())
-        {
-            result.Add(ReadJoined(reader));
-        }
-
-        return result;
-    }
-
 }
