@@ -155,7 +155,9 @@ class Hotels
 
     // DELETE / ta bort hotell
     public static async Task<bool> Delete(int id, Config config)
-    {
+    {   
+
+           
         string query = "DELETE FROM hotels WHERE hotel_id = @id";
 
         var parameters = new MySqlParameter[]
