@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
 
-Config config = new("server=127.0.0.1;uid=root;pwd=kebab123;database=d_a_t");
+Config config = new("server=127.0.0.1;uid=root;pwd=bUmvi6vj;database=drinks_and_travels");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
@@ -69,15 +69,29 @@ app.MapDelete("/hotels/{id}", async (int id, Config config) =>
 
 
 
+
+
 //Delete a user 
 
 
 //CRUD countries
 app.MapGet("countries", Countries.Search);              //Get all countries/search all countries
 app.MapGet("/countries/{id}", Countries.Get);          //Get one country
-app.MapPost("/countries", Countries.Post);            //Create/add a country
-app.MapPut("/countries/{id}", Countries.Put);        //Update country
-app.MapDelete("/delete/{id}", Countries.Delete);    //Delete country
+app.MapPost("/countries", Countries.Post);            //Add a new country as admin 
+app.MapPut("/countries/{id}", Countries.Put);        //Update country as admin
+app.MapDelete("/countries/{id}", async (int id, int user_id, Config config) =>
+{
+    try
+    {
+        await Countries.Delete(id, user_id, config);
+        return Results.Ok();
+    }
+    catch (UnauthorizedAccessException ex)
+    {
+        return Results.Unauthorized();
+    }
+});
+
 
 //CRUD Events
 app.MapGet("events", Events.Search);
