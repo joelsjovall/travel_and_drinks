@@ -1,10 +1,11 @@
 namespace server;
+
 using MySql.Data.MySqlClient;
 
 
 class Bookings
 {
-    public record Joined_Data( 
+    public record Joined_Data(
         int booking_id,
         int user_id,
         string user_email,
@@ -16,20 +17,20 @@ class Bookings
     );
 
     private static Joined_Data ReadJoined(MySqlDataReader r)     //read joined rows
-{
-    return new Joined_Data(
-        r.GetInt32(0),                 
-        r.GetInt32(1),                 
-        r.GetString(2),                
-        r.IsDBNull(3) ? null : r.GetInt32(3),   
-        r.IsDBNull(4) ? null : r.GetString(4),  
-        r.IsDBNull(5) ? null : r.GetInt32(5),   
-        r.IsDBNull(6) ? null : r.GetString(6),  
-        r.GetInt32(7)                  
-    );
-}
+    {
+        return new Joined_Data(
+            r.GetInt32(0),
+            r.GetInt32(1),
+            r.GetString(2),
+            r.IsDBNull(3) ? null : r.GetInt32(3),
+            r.IsDBNull(4) ? null : r.GetString(4),
+            r.IsDBNull(5) ? null : r.GetInt32(5),
+            r.IsDBNull(6) ? null : r.GetString(6),
+            r.GetInt32(7)
+        );
+    }
 
-    public static async Task<List<Joined_Data>> Search(string? search, Config config)  
+    public static async Task<List<Joined_Data>> Search(string? search, Config config)
     //search for user email, hotel name or event name. http://localhost:5000/bookings/?search=månsoskarsson@hotmail.com
     {
         if (string.IsNullOrEmpty(search))
@@ -78,7 +79,7 @@ class Bookings
         int people_count
     );
 
-    public static async Task Post(Post_Args booking, Config config)   
+    public static async Task Post(Post_Args booking, Config config)
     /*POST ex: POST http://localhost:5000/bookings and 
     {
     "user_id": 1,
@@ -142,7 +143,7 @@ class Bookings
         int people_count
     );
 
-    public static async Task Put(int id, Put_Args booking, Config config) 
+    public static async Task Put(int id, Put_Args booking, Config config)
     /*PUT http://localhost:5000/bookings/5 ex: 
     {
     "user_id": 1,
@@ -196,4 +197,5 @@ class Bookings
         await MySqlHelper.ExecuteNonQueryAsync(config.db, "DELETE FROM bookings WHERE booking_id = @id",
         new MySqlParameter("@id", id));
     }
+
 }

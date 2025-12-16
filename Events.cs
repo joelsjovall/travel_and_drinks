@@ -148,12 +148,13 @@ class Events
         string drink_type,
         DateTime event_date,
         int price_per_person,
-        int available_seats
+        int available_seats,
+        int user_id
     );
 
     public static async Task Post(Post_Args e, Config config)
     {
-        string query = """ INSERT INTO events (city_id, name, drink_type, event_date, price_per_person, available_seats) VALUES (@city_id, @name, @drink, @date, @price, @seats) """;
+        string query = """ INSERT INTO events(city_id, name, drink_type, event_date, price_per_person, available_seats) SELECT @city_id, @name, @drink, @date, @price, @seats FROM users WHERE user_id = @user_id AND admin = 1 """;
 
         var parameters = new MySqlParameter[]
         {
@@ -162,10 +163,18 @@ class Events
             new("@drink", e.drink_type),
             new("@date", e.event_date),
             new("@price", e.price_per_person),
-            new("@seats", e.available_seats)
+            new("@seats", e.available_seats),
+            new("user_id", e.user_id)
         };
 
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+int row = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+ if(row == 0)
+        {
+             throw new UnauthorizedAccessException("Endast admin får lägga upp event.");
+
+
+        }
+     
     }
 
     /*PUT ex: http://localhost:5000/events/3 body: {
@@ -174,7 +183,8 @@ class Events
     "drink_type": "Beer",
     "event_date": "2025-04-12T20:00:00",
     "price_per_person": 180,
-    "available_seats": 45
+    "available_seats": 45,
+    "user_id: 1
     }*/
     public record Put_Args(
         int city_id,
@@ -182,12 +192,26 @@ class Events
         string drink_type,
         DateTime event_date,
         int price_per_person,
-        int available_seats
+        int available_seats,
+        int user_id
     );
 
     public static async Task Put(int id, Put_Args e, Config config)
     {
-        string query = """ UPDATE events SET city_id = @city_id, name = @name, drink_type = @drink, event_date = @date, price_per_person = @price, available_seats = @seats WHERE event_id = @id """;
+        string query = """ 
+        UPDATE events e
+        JOIN users u ON u.user_id = @user_id
+        SET
+            e.city_id = @city_id,
+            e.name = @name,
+            e.drink_type = @drink,
+            e.event_date = @date,
+            e.price_per_person = @price,
+            e.available_seats = @seats
+        WHERE
+            e.event_id = @id
+            AND u.admin = 1
+ """;
 
         var parameters = new MySqlParameter[]
         {
@@ -197,20 +221,34 @@ class Events
             new("@drink", e.drink_type),
             new("@date", e.event_date),
             new("@price", e.price_per_person),
-            new("@seats", e.available_seats)
+            new("@seats", e.available_seats),
+            new("@user_id", e.user_id)
         };
+int row = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+ if(row == 0)
+        {
+             throw new UnauthorizedAccessException("Endast admin får lägga upp event.");
 
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+
+        }
     }
 
     //DELETE
-    public static async Task Delete(int id, Config config)
+    // http://localhost:5000/events/22?user_id=3
+    public static async Task Delete(int id,int user_id, Config config)
     {
-        string query = "DELETE FROM events WHERE event_id = @id";
+        string query = """
+        DELETE e
+        FROM events e
+        JOIN users u ON u.user_id = @user_id
+        WHERE e.event_id = @id
+          AND u.admin = 1
+    """;
 
         var parameters = new MySqlParameter[]
         {
-            new("@id", id)
+            new("@id", id),
+            new("@user_id", user_id)
         };
 
         await MySqlHelper.ExecuteNonQueryAsync(config.db, query,parameters);
