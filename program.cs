@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
 
-Config config = new("server=127.0.0.1;uid=root;pwd=bUmvi6vj;database=drinks_and_travels");
+Config config = new("server=127.0.0.1;uid=root;pwd=Mans010101!;database=dranks_and_travel");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
