@@ -96,50 +96,79 @@ class Countries
         return result;
     }
 
-    public record Post_Args(string Name);
-    public static async Task
+    public record Post_Args(string Name, int user_id);
 
-    Post(Post_Args country, Config config)      //create/add a new country
-    {
-        string query = """          
-            INSERT INTO countries(name)     
-            VALUES(@name)
-            """;
-
-        var parameters = new MySqlParameter[]
-        {
-                new("@name", country.Name)
-        };
-
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
-    }
-
-    public record Put_Args(string Name);
-    public static async Task
-    Put(int id, Put_Args country, Config config)        //sql command to update a country
+    public static async Task Post(Post_Args country, Config config)
     {
         string query = """
-            UPDATE countries
-            SET name = @name
-            WHERE country_id = @id
-            """;
+        INSERT INTO countries(name)
+        SELECT @name
+        FROM users
+        WHERE user_id = @user_id
+          AND admin = 1
+        """;
 
         var parameters = new MySqlParameter[]
         {
-                new("@id", id),
-                new("@name", country.Name),
+        new("@name", country.Name),
+        new("@user_id", country.user_id)
         };
 
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+        int rows = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+
+        if (rows == 0)
+            throw new UnauthorizedAccessException("Only an admin may add a country");
     }
 
-    public static async Task Delete(int id, Config config)
+    public record Put_Args(string Name, int user_id);
+
+    public static async Task Put(int id, Put_Args country, Config config)
     {
-        string query = "DELETE FROM countries WHERE country_id = @id";
+        string query = """
+        UPDATE countries
+        SET name = @name
+        WHERE country_id = @id
+          AND EXISTS (
+              SELECT 1 FROM users
+              WHERE user_id = @user_id
+                AND admin = 1
+          )
+        """;
+
         var parameters = new MySqlParameter[]
         {
-            new ("@id", id)
+        new("@id", id),
+        new("@name", country.Name),
+        new("@user_id", country.user_id)
         };
-        await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+
+        int rows = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+
+        if (rows == 0)
+            throw new UnauthorizedAccessException("Only an admin may update a coury");
     }
-}       //we need a delete function for the admin to be able to delete a country if there are no available events anymore
+
+    public static async Task Delete(int id, int user_id, Config config)
+    {
+        string query = """
+        DELETE c
+        FROM countries c
+        JOIN users u ON u.user_id = @user_id
+        WHERE c.country_id = @id
+          AND u.admin = 1
+    """;
+
+        var parameters = new MySqlParameter[]
+        {
+        new("@id", id),
+        new("@user_id", user_id),
+        };
+
+        int rows = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
+
+        if (rows == 0)
+        {
+            throw new UnauthorizedAccessException("Only an admin may delete a country");
+        }
+    }
+}
