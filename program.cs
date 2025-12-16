@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using server;
 
 
-Config config = new("server=127.0.0.1;uid=root;pwd=kebab123;database=d_a_t");
+Config config = new("server=127.0.0.1;uid=root;pwd=bUmvi6vj;database=drinks_and_travels");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(config);
 builder.Services.AddDistributedMemoryCache();
@@ -66,6 +66,9 @@ app.MapDelete("/hotels/{id}", async (int id, Config config) =>
     bool deleted = await Hotels.Delete(id, config);
     return deleted ? Results.Ok() : Results.NotFound();
 });
+
+// Get all bookings for a user
+app.MapGet("/users/{userId}/bookings", Bookings.GetByUser);
 
 
 
