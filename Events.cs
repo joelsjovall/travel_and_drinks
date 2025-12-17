@@ -234,7 +234,7 @@ int row = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
     }
 
     //DELETE
-    // http://localhost:5000/events/22?user_id=3
+    // http://localhost:5000/events/22?user_id=3 
     public static async Task Delete(int id,int user_id, Config config)
     {
         string query = """
@@ -243,7 +243,7 @@ int row = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
         JOIN users u ON u.user_id = @user_id
         WHERE e.event_id = @id
           AND u.admin = 1
-    """;
+    """;    
 
         var parameters = new MySqlParameter[]
         {
