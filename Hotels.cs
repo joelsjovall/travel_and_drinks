@@ -12,7 +12,8 @@ class Hotels
         int price_per_night,
         int available_rooms,
         int? rating,
-        bool has_wifi
+        bool has_wifi,
+        bool has_pool
     );
 
     public record CreateHotel_Data(
@@ -21,7 +22,8 @@ class Hotels
     int price_per_night,
     int available_rooms,
     int? rating,
-    bool has_wifi
+    bool has_wifi,
+    bool has_pool
 );
 
     public record UpdateHotel_Data(
@@ -29,7 +31,8 @@ class Hotels
       int? price_per_night,
       int? available_rooms,
       int? rating,
-      bool? has_wifi
+      bool? has_wifi,
+      bool? has_pool
   );
 
     // GET Hotels → kan filtrera på land, stad eller sökterm
@@ -46,7 +49,7 @@ class Hotels
         string query = """
             SELECT h.hotel_id, h.city_id, h.name,
                    h.price_per_night, h.available_rooms,
-                   h.rating, h.has_wifi
+                   h.rating, h.has_wifi, h.has_pool
             FROM hotels h
             JOIN cities c ON h.city_id = c.city_id
             """;
@@ -93,7 +96,9 @@ class Hotels
                 reader.GetInt32(3),               // price_per_night
                 reader.GetInt32(4),               // available_rooms
                 reader.IsDBNull(5) ? null : reader.GetInt32(5), // rating
-                reader.GetInt32(6) == 1           // has_wifi → bool
+                reader.GetInt32(6) == 1,           // has_wifi → bool
+                reader.GetInt32(7) == 1           // has_pool
+
             ));
         }
 
@@ -103,8 +108,8 @@ class Hotels
     public static async Task<int> Create(CreateHotel_Data data, Config config)
     {
         string query = """
-            INSERT INTO hotels (city_id, name, price_per_night, available_rooms, rating, has_wifi)
-            VALUES (@city_id, @name, @price, @rooms, @rating, @wifi);
+            INSERT INTO hotels (city_id, name, price_per_night, available_rooms, rating, has_wifi, has_pool)
+            VALUES (@city_id, @name, @price, @rooms, @rating, @wifi, @pool);
             SELECT LAST_INSERT_ID();
         """;
 
@@ -115,7 +120,8 @@ class Hotels
             new("@price", data.price_per_night),
             new("@rooms", data.available_rooms),
             new("@rating", data.rating),
-            new("@wifi", data.has_wifi ? 1 : 0)
+            new("@wifi", data.has_wifi ? 1 : 0),
+            new("@pool", data.has_pool ? 1 : 0)
         };
 
         object result = await MySqlHelper.ExecuteScalarAsync(config.db, query, parameters);
@@ -134,7 +140,9 @@ class Hotels
                 price_per_night = COALESCE(@price, price_per_night),
                 available_rooms = COALESCE(@rooms, available_rooms),
                 rating = COALESCE(@rating, rating),
-                has_wifi = COALESCE(@wifi, has_wifi)
+                has_wifi = COALESCE(@wifi, has_wifi),
+                has_pool = COALESCE(@pool, has_pool)
+
             WHERE hotel_id = @id;
         """;
 
@@ -145,7 +153,8 @@ class Hotels
             new("@price", data.price_per_night),
             new("@rooms", data.available_rooms),
             new("@rating", data.rating),
-            new("@wifi", data.has_wifi.HasValue ? (data.has_wifi.Value ? 1 : 0) : null)
+            new("@wifi", data.has_wifi.HasValue ? (data.has_wifi.Value ? 1 : 0) : null),
+            new("@pool", data.has_pool.HasValue ? (data.has_pool.Value ? 1 : 0) : null)
         };
 
         int rows = await MySqlHelper.ExecuteNonQueryAsync(config.db, query, parameters);
@@ -169,3 +178,47 @@ class Hotels
         return rows > 0;
     }
 }
+
+
+
+// Hämta alla hotell
+// GET http://localhost:5000/hotels
+
+
+// Hämta hotell med filter 
+// GET http://localhost:5000/hotels?city_id=1
+// GET http://localhost:5000/hotels?country_id=2
+// GET http://localhost:5000/hotels?searchTerm=Grand
+
+
+// Skapa nytt hotell
+// POST http://localhost:5000/hotels
+// Body : (ett exempel)
+// {
+//   "city_id": 1,
+//   "name": "Test Hotel",
+//   "price_per_night": 200,
+//   "available_rooms": 10,
+//   "rating": 4,
+//   "has_wifi": true,
+//   "has_pool": false
+// }
+
+
+// Uppdatera hotell (t.ex. pool / wifi / pris)
+// PUT http://localhost:5000/hotels/{id}
+// Exempel:
+// PUT http://localhost:5000/hotels/2
+// Body:
+// {
+//   "has_pool": true eller false
+// }
+// Body:
+// {
+//   "has_wifi": true eller false
+// }
+
+// Ta bort hotell
+// DELETE http://localhost:5000/hotels/{id}
+// Exempel:
+// DELETE http://localhost:5000/hotels/5
