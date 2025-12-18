@@ -1,99 +1,24 @@
 Drinks & Travels – Backend System
 
-Drinks & Travels är ett backend-system byggt i C# .NET (Minimal API) med MySQL.
-Applikationen fungerar som en rese- och upplevelseplattform där användare kan söka resmål, boka hotell och event samt lämna betyg (ratings). Administratörer kan hantera innehåll i systemet.
+Drinks & Travels är ett backend-system byggt i C# .NET med Minimal API och MySQL som databas. Applikationen är tänkt att fungera som en rese- och upplevelseplattform där användare kan utforska olika destinationer, boka hotell och event samt lämna betyg på sina upplevelser. Systemet är uppbyggt som ett REST-API och testas helt via externa verktyg utan något grafiskt gränssnitt.
 
-Tekniker
+Projektet är utvecklat med fokus på tydlig struktur, relationsdatabas, rollhantering och sökfunktionalitet. API:t är uppdelat i flera resurser som tillsammans bygger upp hela bokningsflödet.
 
-C# .NET Minimal API
+Applikationen är byggd med C# .NET Minimal API och använder MySQL som databas. All kommunikation sker via HTTP-endpoints och testas med Thunder Client. Autentisering hanteras med sessions, där inloggade användare identifieras via ett user_id och administratörer via en admin-flagga i users-tabellen.
 
-MySQL
+Databasen är relationsbaserad och består av flera sammankopplade tabeller. Centrala tabeller är users, countries, cities, hotels, events och bookings. För betygssystemet används separata tabeller för hotel_ratings och event_ratings. Relationer mellan tabellerna säkras med foreign keys för att säkerställa dataintegritet, till exempel mellan countries och cities samt mellan bookings och hotels/events.
 
-Thunder Client för testning
+Systemet stödjer full CRUD-funktionalitet för de flesta resurser. Det går att skapa, läsa, uppdatera och ta bort länder, städer, hotell och event. Sökningar kan göras med inkluderande filter genom LIKE-sökningar, vilket gör det möjligt att hitta exempelvis länder, städer eller event baserat på delar av namn. Användare kan skapa bokningar som kopplas till både hotell och event, och dessa bokningar kan sedan hämtas med sammanslagen information via JOIN-frågor.
 
-Session-baserad autentisering
+Ett betygssystem har implementerats där användare kan lämna ratings på både hotell och event. Ratings kan hämtas per hotell eller event, och nya betyg kan skapas via separata POST-endpoints. Detta gör det möjligt att visa tidigare användares omdömen och poäng.
 
-Funktionalitet:
+Autentisering sker via sessions. När en användare loggar in lagras user_id i sessionen. Administratörsbehörighet hanteras via en admin-kolumn i users-tabellen. Endpoints som förändrar systemets innehåll, till exempel skapande eller borttagning av länder och städer, är skyddade så att endast användare med admin-behörighet kan utföra dessa operationer.
 
-CRUD för Countries, Cities, Hotels och Events
+För att köra applikationen lokalt behöver projektet klonas från GitHub och en MySQL-databas skapas. Ett SQL-script används för att skapa tabeller och lägga in testdata. Connection string i Program.cs måste uppdateras så att den pekar på rätt databas och användare. När detta är gjort kan applikationen startas med kommandot dotnet run, vilket startar API:t på http://localhost:5000
+.
 
-Sökning med inkluderande filter (LIKE)
+All funktionalitet testas via Thunder Client. Där kan man stegvis demonstrera hur GET, POST, PUT och DELETE fungerar för olika resurser i systemet. Admin- och användarroller kan också demonstreras genom att anropa endpoints med olika user_id.
 
-Bookings för hotell och event
+Projektet har utvecklats agilt i team. Arbetet har delats upp i issues och feature-branches, där olika delar av systemet har utvecklats parallellt. Funktionalitet har testats löpande och justerats efter behov, vilket har gjort att systemet kunnat byggas upp steg för steg på ett kontrollerat sätt.
 
-Ratings på hotell och event
-
-Admin-behörighet via users.admin
-
-Relationer mellan tabeller med foreign keys
-
-Databas
-
-Databasen innehåller bland annat:
-
--users (med admin-flagga)
-
--countries
-
--cities
-
--hotels
-
--events
-
--bookings
-
--hotel_ratings
-
--event_ratings
-
-Databasen är relationsbaserad och använder foreign keys för dataintegritet.
-
-Autentisering & Roller
-
-Inloggning sker via sessioner (user_id)
-
-Admin styrs via kolumnen admin i users
-
-Users kan boka och ratea
-
-Admins kan skapa, uppdatera och ta bort innehåll
-
-API – Exempel
-
-GET /countries?search=uni
-
-GET /cities?search=lon
-
-GET /events?search=beer
-
-POST /bookings
-
-GET /hotels/{id}/ratings
-
-POST /hotels/{id}/ratings
-
-Kör applikationen genom att klona projektet:
--git clone <repo-url>
--cd travel_and_drinks
-
-Skapa databasen och kör sql scriptet som finns i projektet för att skapa alla tabeller och datan
--server=127.0.0.1;
--uid=root;
--pwd=PASSWORD;
--database=drinks_and_travels;
-
-Starta API:t med: 
--dotnet run
-
-Testning
-
-Projektet testas via Thunder Client
-
-Alla endpoints kan testas manuellt (GET, POST, PUT, DELETE)
-
-Admin-funktioner kräver att användaren har admin = true/admin = 1 
-
-
-
-
+Sammanfattningsvis är Drinks & Travels ett komplett backend-projekt som visar hur man bygger ett REST-API med C# .NET, MySQL, rollhantering, sökfunktioner, bokningslogik och ratings, samtidigt som ett agilt arbetssätt har använts genom hela utvecklingsprocessen.
